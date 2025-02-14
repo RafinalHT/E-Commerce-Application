@@ -67,6 +67,10 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public OrderDTO placeOrder(String email, Long cartId, String paymentMethod) {
 
+		if (!"COD".equalsIgnoreCase(paymentMethod)) {
+			throw new APIException("Payment Method must be COD");
+		}
+
 		Cart cart = cartRepo.findCartByEmailAndCartId(email, cartId);
 
 		if (cart == null) {
@@ -83,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
 
 		Payment payment = new Payment();
 		payment.setOrder(order);
-		payment.setPaymentMethod(paymentMethod);
+		payment.setPaymentMethod("COD");
 
 		payment = paymentRepo.save(payment);
 
